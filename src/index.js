@@ -27,9 +27,16 @@ fetch(urlToys)
   <button class="like-btn" id="${toy.id}">Like ❤️</button>`
   card.setAttribute('class', 'card')
   document.getElementById('toy-collection').append(card)
+
+  card.querySelector('.like-btn').addEventListener('click', ()=>{
+    toy.likes += 1
+    card.querySelector('p').textContent = `${toy.likes} Likes`
+    editToy(toy)
+  })
   });
 })
 }
+
 function createToy(){
   let form = document.querySelector('form')//document.getElementById('add-toy-form')
   form.addEventListener('submit', e=>{
@@ -49,5 +56,20 @@ function createToy(){
   .then(res=>res.json())
   .then(newToy=>console.log(newToy))
   })
+  }
+
+  function editToy(toy){
+    fetch(`http://localhost:3000/toys/${toy.id}`,{
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept : "application/json"
+      },
+      body: JSON.stringify({
+        'likes': parseInt(`${toy.likes}`)
+      })
+    })
+    .then(res=>res.json())
+    .then(editedToy=>console.log(editedToy))
   }
 
